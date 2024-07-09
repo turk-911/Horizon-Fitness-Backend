@@ -4,35 +4,8 @@ import dotenv from "dotenv";
 import { createError } from "../error.js";
 import User from "../models/User.js";
 import Workout from "../models/Workout.js";
-import nodemailer from "nodemailer"
 
 dotenv.config();
-function sendEmail(res, email, user) {
-  const text = `Hi ${user}!, Welcome on a new journey of fitness with Horizon Fitness Tracker. Track your fitness goals and unleash the beast inside you. \n We aim to provide the best experience to you and help achieve your dream physique real quick.`;
-  const subjectOfEmail = "Welcome";
-  const auth = nodemailer.createTransport({
-    service: "gmail",
-    secure: true,
-    port: 465,
-    auth: {
-      user: process.env.SENDER_EMAIL,
-      pass: process.env.SENDER_PASS,
-    },
-  });
-  const reciever = {
-    from: process.env.SENDER_EMAIL,
-    to: [email],
-    subject: subjectOfEmail,
-    text: text,
-  };
-  auth.sendMail(reciever, (error, emailResponse) => {
-    if (error) {
-      throw error;
-    }
-    console.log("Email Sent");
-    res.end();
-  });
-}
 
 export const UserRegister = async (req, res, next) => {
   try {
@@ -55,9 +28,8 @@ export const UserRegister = async (req, res, next) => {
     });
     const createdUser = await user.save();
     const token = jwt.sign({ id: createdUser._id }, process.env.JWT, {
-      expiresIn: "9999 years",
+      expiresIn: "30d",
     });
-    sendEmail(res, email, user.name);
     return res.status(200).json({ token, user });
   } catch (error) {
     return next(error);
@@ -248,7 +220,7 @@ export const getWorkoutsByDate = async (req, res, next) => {
 
 export const addWorkout = async (req, res, next) => {
   try {
-    const userId = req.user?._id;
+    const userId = req.user?.id;
     const { workoutString } = req.body;
     if (!workoutString) {
       return next(createError(400, "Workout string is missing"));
