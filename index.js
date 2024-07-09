@@ -22,7 +22,7 @@ app.use("/api/user/", UserRoutes);
 
 app.get("/", async (req, res) => {
   res.status(200).json({
-    message: "Hello developers from GFG",
+    message: "Lol you found it",
   });
 });
 
