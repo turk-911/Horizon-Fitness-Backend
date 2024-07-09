@@ -6,8 +6,15 @@ import UserRoutes from "./routes/User.js";
 
 dotenv.config();
 
+const corsOptions = {
+  origin: "https://horizon-fitness.netlify.app",
+  methods: "GET, HEAD, PUT, PATCH, POST, DELETE",
+  allowedHeaders: ['Content-type', 'Authorization'],
+  credentials: true,
+};
+
 const app = express();
-app.use(cors());
+app.use(cors(corsOptions));
 app.use(express.json({ limit: "50mb" }));
 app.use(express.urlencoded({ extended: true })); // for form data
 
