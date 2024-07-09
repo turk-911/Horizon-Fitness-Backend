@@ -1,10 +1,9 @@
 import mongoose from "mongoose";
-import User from "./User.js";
 const WorkoutSchema = new mongoose.Schema(
   {
     user: {
       type: mongoose.Schema.Types.ObjectId,
-      ref: User,
+      ref: "User",
       required: true,
     },
     category: {
